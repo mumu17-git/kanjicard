@@ -22,7 +22,6 @@ async function onClick_Card(elem) {
     parentElem.classList.add("img-hidden");
     await sleep(500);
     childElem.classList.remove("img-hidden");
-    
 }
 
 async function Restore_Card(elem) {
