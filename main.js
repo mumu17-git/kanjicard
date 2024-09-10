@@ -13,6 +13,7 @@ async function onClick_Card(elem) {
     var childID = parentID.replace("back","front");
     var parentElem = di(parentID);
     var childElem = di(childID);
+    Restore_Card(di("card"+String(selectedCardsNumber[NumberOfReversedCards])+"-front"))
     selectedCardsNumber[NumberOfReversedCards] = Number.parseInt(parentID.replace("card","").replace("-back",""));
     NumberOfReversedCards++;
     parentElem.classList.add("img-rev1");
