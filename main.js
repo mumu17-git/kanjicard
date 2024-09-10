@@ -13,7 +13,8 @@ async function onClick_Card(elem) {
     var childID = parentID.replace("back","front");
     var parentElem = di(parentID);
     var childElem = di(childID);
-    Restore_Card(di("card"+String(selectedCardsNumber[NumberOfReversedCards])+"-front"))
+    //if(selectedCardsNumber[NumberOfReversedCards] == 0) Restore_Card(di("card"+String(selectedCardsNumber[0])+"-front"));
+    //selectedCardsNumber[0] = Number.parseInt(parentID.replace("card","").replace("-back",""));
     selectedCardsNumber[NumberOfReversedCards] = Number.parseInt(parentID.replace("card","").replace("-back",""));
     NumberOfReversedCards++;
     parentElem.classList.add("img-rev1");
@@ -29,7 +30,6 @@ async function Restore_Card(elem) {
     var parentID = childID.replace("front","back");
     var parentElem = di(parentID);
     var childElem = di(childID);
-    //childElem.classList.add("img-hidden");
     parentElem.classList.remove("img-rev1");
     childElem.classList.remove("img-rev2");
     parentElem.classList.remove("img-hidden");
