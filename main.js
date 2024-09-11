@@ -92,7 +92,6 @@ function setup() {
     const selectedKanjiList = shuffledKanjiList.slice(0,Math.floor(NumberOfCards/2));
     console.log(selectedKanjiList);
     const shuffledSelectedKanjiList = shuffleArray([...selectedKanjiList,...selectedKanjiList]);
-
     placeCards(shuffledSelectedKanjiList);
 }
 
