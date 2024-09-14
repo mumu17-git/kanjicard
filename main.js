@@ -7,6 +7,8 @@ const NumberOfCards = 52; // < 80
 var AllKanjiList = [null];
 var selectedCardsNumber = [0,0];
 var NumberOfReversedCards = 0;
+var playerData = [{"playerName": "player1","NumberOfGotCards": 0, "turn": 1}];
+var turn = 1;
 
 async function onClick_Card(elem) {
     var parentID = elem.getAttribute("id");
@@ -22,6 +24,9 @@ async function onClick_Card(elem) {
     parentElem.classList.add("img-hidden");
     await sleep(500);
     childElem.classList.remove("img-hidden");
+
+    console.log(selectedCardsNumber);
+    if(!selectedCardsNumber.includes(0)) twoCardsReversed();
 }
 
 async function Restore_Card(elem) {
@@ -38,9 +43,27 @@ async function Restore_Card(elem) {
     childElem.classList.add("img-hidden");
     childElem.style.display = "block";
     childElem.setAttribute("src",childElem.getAttribute("src").replace("new","common"));
-    selectedCardsNumber[0] = 0;
-    selectedCardsNumber[1] = 0;
-    NumberOfReversedCards = 0;
+}
+
+function setNextTurn() {
+    
+}
+
+function twoCardsReversed() {
+    var twoCardsKanjiList = ["",""];
+    for(var i = 0;i < selectedCardsNumber.length;i++) {
+        twoCardsKanjiList[i] = di("card"+selectedCardsNumber[i]+"-front").getAttribute("name");
+    }
+
+    if(twoCardsKanjiList[0] !== twoCardsKanjiList[1]) {
+        setNextTurn();
+        selectedCardsNumber[0] = 0;
+        selectedCardsNumber[1] = 0;
+        NumberOfReversedCards = 0;
+        for(var i = 0;i < selectedCardsNumber.length;i++) {
+            Restore_Card(di("card"+selectedCardsNumber[i]+"-front"));
+        }
+    }
 }
 
 function parseCsv(data) {
@@ -59,7 +82,7 @@ const shuffleArray = (array) => {
 }
 
 function addCard(cardNumber,kanji,tr) {
-    di("tableCards_tr"+String(tr)).insertAdjacentHTML("beforeend",'<td style="position: relative;"><img src="img/card_back/back.png" id="card'+String(cardNumber)+'-back" onclick="onClick_Card(this)" class="img-def"></img><img src="img/card_front/'+levelStringList[levelNumber]+'/new/'+String(kanji)+'.png" id="card'+String(cardNumber)+'-front" ondblclick="Restore_Card(this)" class="img-front img-def img-hidden"></img></td>');
+    di("tableCards_tr"+String(tr)).insertAdjacentHTML("beforeend",'<td style="position: relative;"><img src="img/card_back/back.png" id="card'+String(cardNumber)+'-back" onclick="onClick_Card(this)" class="img-def"></img><img src="img/card_front/'+levelStringList[levelNumber]+'/new/'+String(kanji)+'.png" id="card'+String(cardNumber)+'-front" name="'+String(kanji)+'" ondblclick="Restore_Card(this)" class="img-front img-def img-hidden"></img></td>');
 }
 
 function placeCards(kanjiList) {
@@ -83,6 +106,10 @@ function getAllKanji() {
         $.get('./csv/'+levelStringList[l]+'.csv', parseCsv, 'text');
         $.ajaxSetup({ async: true });
     }
+}
+
+function preload() {
+
 }
 
 function setup() {
