@@ -11,6 +11,8 @@ var AllKanjiList = [null];
 var selectedCardsNumber = [0,0];
 var NumberOfReversedCards = 0;
 var playerData = [];
+var gameData = null;
+var maxplayer = 0;
 var turn = 1;
 const roomID = String(new Date().getTime());
 
@@ -153,10 +155,17 @@ function getAllKanji() {
     }
 }
 
+
 async function db_initPlayerData() {
     const db = getFirestore(app);
+    const nameList = [];
+    for(var i = 0;i < playerData.length;i++) 
+        nameList.push(playerData[i]["playerName"]);
     await setDoc(doc(db, roomID, "players"), {
         turn: turn,
+        maxplayer: maxplayer,
+        level: levelNumber,
+        nameList: nameList,
     });
 
     for(var i = 0;i < playerData.length;i++) {
@@ -166,6 +175,7 @@ async function db_initPlayerData() {
             [String(list[1])]: playerData[i][list[1]]
         });
     }
+    db_save("0","nowgameid", "collection", roomID);
 }
 
 function inputPlayerData() {
@@ -174,12 +184,13 @@ function inputPlayerData() {
         "人数": "ゲームをプレイする人数を入力してください",
         "名前": "人目のプレイヤーの名前を入力してください"
     };
-    var gameData = {
+    gameData = {
         "レベル": window.prompt(description["レベル"], "1"),
         "人数": window.prompt(description["人数"], "4"),
     };
 
     if(1 <= parseInt(gameData["レベル"]) && parseInt(gameData["レベル"]) <= 6) levelNumber = parseInt(gameData["レベル"]);
+    maxplayer = parseInt(gameData["人数"]);
     for(var i = 0;i < parseInt(gameData["人数"]);i++) {
         playerData.push({"playerName": window.prompt(String(i+1)+description["名前"],"player"+String(i+1)),"NumberOfGotCards": 0, "turn": i+1});
     }

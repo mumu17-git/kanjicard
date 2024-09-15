@@ -4,7 +4,7 @@ html {
 
 .box-010 {
     position: relative;
-    max-width: 400px;
+    max-width: 250px;
     margin: 1.5em auto;
     padding: 2.5em 1.5em 1.5em;
     box-shadow: 0 2px 3px rgb(0 0 0 / 20%);
@@ -26,6 +26,10 @@ html {
 
 .box-010 p {
     margin: 0;
+}
+
+.box-010 p strong {
+    font-size: 3em;
 }
 
 .area {
