@@ -29,7 +29,9 @@ async function onClick_Card(elem) {
     if(!selectedCardsNumber.includes(0)) twoCardsReversed();
 }
 
-async function Restore_Card(elem) {
+async function Restore_Card(selectedCardNumber_tmp) {
+    
+    var elem = di("card"+selectedCardNumber_tmp+"-front");
     var childID = elem.getAttribute("id");
     var parentID = childID.replace("front","back");
     var parentElem = di(parentID);
@@ -43,6 +45,7 @@ async function Restore_Card(elem) {
     childElem.classList.add("img-hidden");
     childElem.style.display = "block";
     childElem.setAttribute("src",childElem.getAttribute("src").replace("new","common"));
+    
 }
 
 function setNextTurn() {
@@ -56,13 +59,14 @@ function twoCardsReversed() {
     }
 
     if(twoCardsKanjiList[0] !== twoCardsKanjiList[1]) {
+        for(var i = 0;i < selectedCardsNumber.length;i++) {
+            setTimeout(Restore_Card,2500,selectedCardsNumber[i]);
+        }
+        
         setNextTurn();
         selectedCardsNumber[0] = 0;
         selectedCardsNumber[1] = 0;
         NumberOfReversedCards = 0;
-        for(var i = 0;i < selectedCardsNumber.length;i++) {
-            Restore_Card(di("card"+selectedCardsNumber[i]+"-front"));
-        }
     }
 }
 
@@ -82,7 +86,7 @@ const shuffleArray = (array) => {
 }
 
 function addCard(cardNumber,kanji,tr) {
-    di("tableCards_tr"+String(tr)).insertAdjacentHTML("beforeend",'<td style="position: relative;"><img src="img/card_back/back.png" id="card'+String(cardNumber)+'-back" onclick="onClick_Card(this)" class="img-def"></img><img src="img/card_front/'+levelStringList[levelNumber]+'/new/'+String(kanji)+'.png" id="card'+String(cardNumber)+'-front" name="'+String(kanji)+'" ondblclick="Restore_Card(this)" class="img-front img-def img-hidden"></img></td>');
+    di("tableCards_tr"+String(tr)).insertAdjacentHTML("beforeend",'<td style="position: relative;"><img src="img/card_back/back.png" id="card'+String(cardNumber)+'-back" onclick="onClick_Card(this)" class="img-def"></img><img src="img/card_front/'+levelStringList[levelNumber]+'/new/'+String(kanji)+'.png" id="card'+String(cardNumber)+'-front" name="'+String(kanji)+'" class="img-front img-def img-hidden"></img></td>');
 }
 
 function placeCards(kanjiList) {
@@ -108,13 +112,11 @@ function getAllKanji() {
     }
 }
 
-function preload() {
-
-}
 
 function setup() {
     levelNumber = 1;
     getAllKanji();
+    
     const shuffledKanjiList = getRandomCards();
     const selectedKanjiList = shuffledKanjiList.slice(0,Math.floor(NumberOfCards/2));
     console.log(selectedKanjiList);
@@ -122,6 +124,4 @@ function setup() {
     placeCards(shuffledSelectedKanjiList);
 }
 
-function draw() {
-
-}
+setup();
