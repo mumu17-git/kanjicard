@@ -7,6 +7,26 @@
     <title></title>
 </head>
 <body>
+    <div class="area">
+
+        <svg viewBox="0 0 800 450">
+    
+          <defs>
+            <filter id="feTurbulence" filterUnits="userSpaceOnUse" x="0" y="0" width="800" height="450">
+              <feTurbulence type="turbulence" baseFrequency="0.2" numOctaves="10" seed="3" stitchTiles="noStitch">
+            </filter>
+          </defs>
+    
+          <circle filter="url(#feTurbulence)" cx="1000" cy="100" r="60" fill="#58a8b8" stroke="red" stroke-width="25">
+    
+        </svg>
+    
+        <div class="bg">
+            <div class="box-010">
+                <span>タイトル</span>
+                <p>タイトルをテープ風にしたボックス。立体的にすることで、可愛らしさがありながらかなり目立つデザインになっています。</p>
+            </div>
+        </div>
     <script src="../firebaseApp.js" type="module"></script>
     <script src="main.js" type="module"></script>
 </body>

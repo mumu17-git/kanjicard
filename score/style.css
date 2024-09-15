@@ -1,0 +1,64 @@
+html {
+    width: 100%;
+}
+
+.box-010 {
+    position: relative;
+    max-width: 400px;
+    margin: 1.5em auto;
+    padding: 2.5em 1.5em 1.5em;
+    box-shadow: 0 2px 3px rgb(0 0 0 / 20%);
+    background-color: #e0efff;
+    color: #333333;
+}
+
+.box-010 span {
+    position: absolute;
+    top: -15px;
+    transform: translateX(-.3em) rotate(-5deg);
+    padding: .5em 2em;
+    border-right: 2px dotted rgb(0 0 0 / 10%);
+    border-left: 2px dotted rgb(0 0 0 / 10%);
+    box-shadow: 0 0 5px rgb(0 0 0 / 20%);
+    background-color: rgb(255 255 255 / 40%);
+    font-weight: 600;
+}
+
+.box-010 p {
+    margin: 0;
+}
+
+.area {
+    width: 800px;
+    height: 450px;
+    overflow: hidden;
+}
+
+.bg {
+    position: absolute;
+    width: 800px;
+    height: 450px;
+    background-color: #8a4e00;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    opacity: 0.8;
+    border: 10px solid #dea050;
+}
+
+.bg::before {
+    content: "";
+    border-top: #382000 3px solid;
+    position: absolute;
+    top: 0;
+    width: 800px;
+}
+
+.bg::after {
+    content: "";
+    border-left: #382000 3px solid;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 450px;
+}
