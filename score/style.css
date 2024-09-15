@@ -29,15 +29,15 @@ html {
 }
 
 .area {
-    width: 800px;
-    height: 450px;
+    width: 1100px;
+    height: 600px;
     overflow: hidden;
 }
 
 .bg {
     position: absolute;
-    width: 800px;
-    height: 450px;
+    width: 1100px;
+    height: 600px;
     background-color: #8a4e00;
     top: 0;
     left: 0;
@@ -51,7 +51,7 @@ html {
     border-top: #382000 3px solid;
     position: absolute;
     top: 0;
-    width: 800px;
+    width: 1100px;
 }
 
 .bg::after {
@@ -60,5 +60,5 @@ html {
     position: absolute;
     top: 0;
     left: 0;
-    height: 450px;
+    height: 600px;
 }
