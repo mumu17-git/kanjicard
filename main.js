@@ -4,18 +4,19 @@ import { getFirestore, doc, updateDoc, setDoc } from "https://www.gstatic.com/fi
 const di =(id)=>{return document.getElementById(id)}
 const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
 const cardsElem = di("table-cards");
-var levelNumber = 0;
+var levelNumber = 1;
 const levelStringList = [null,"1st","2nd","3rd","4th","5th","6th"];
 const NumberOfCards = 52; // < 80
 var AllKanjiList = [null];
 var selectedCardsNumber = [0,0];
 var NumberOfReversedCards = 0;
-var playerData = [{"playerName": "player1","NumberOfGotCards": 0, "turn": 1}];
+var playerData = [];
 var turn = 1;
-const roomID = "room0";
+const roomID = String(new Date().getTime());
 
 
-async function onClick_Card(elem) {
+window.onClick_Card = async(elem) =>{
+//async function onClick_Card(elem) {
     var parentID = elem.getAttribute("id");
     var childID = parentID.replace("back","front");
     var parentElem = di(parentID);
@@ -53,11 +54,25 @@ async function Restore_Card(selectedCardNumber_tmp) {
     
 }
 
-function setNextTurn() {
+async function Hidden_Card(selectedCardNumber_tmp) {
+    
+    var elem = di("card"+selectedCardNumber_tmp+"-front");
+    var childID = elem.getAttribute("id");
+    var parentID = childID.replace("front","back");
+    var parentElem = di(parentID);
+    var childElem = di(childID);
+    parentElem.classList.add("img-hidden");
+    childElem.classList.add("img-hidden");
     
 }
 
-function twoCardsReversed() {
+function setNextTurn() {
+    turn++;
+    if(turn > playerData.length) turn = 1;
+    db_save(roomID, "players","turn", turn);
+}
+
+async function twoCardsReversed() {
     var twoCardsKanjiList = ["",""];
     for(var i = 0;i < selectedCardsNumber.length;i++) {
         twoCardsKanjiList[i] = di("card"+selectedCardsNumber[i]+"-front").getAttribute("name");
@@ -67,9 +82,19 @@ function twoCardsReversed() {
         for(var i = 0;i < selectedCardsNumber.length;i++) {
             setTimeout(Restore_Card,2500,selectedCardsNumber[i]);
         }
+        await sleep(2500);
         setNextTurn();
     }else {
-
+        for(var i = 0;i < playerData.length;i++) {
+            if(playerData[i]["turn"] != turn) continue;
+            playerData[i]["NumberOfGotCards"] = playerData[i]["NumberOfGotCards"] + 2;
+            for(var j = 0;j < selectedCardsNumber.length;j++) {
+                setTimeout(Hidden_Card,2500,selectedCardsNumber[j]);
+            }
+            await sleep(2500);
+            console.log(playerData);
+            db_save(roomID, playerData[i]["playerName"],"NumberOfGotCards", playerData[i]["NumberOfGotCards"]);
+        }
     }
 
     selectedCardsNumber[0] = 0;
@@ -77,7 +102,7 @@ function twoCardsReversed() {
     NumberOfReversedCards = 0;
 }
 
-async function save(collection,document,key,value) {
+async function db_save(collection,document,key,value) {
     var db = getFirestore(app);
     var userRef = doc(db, collection, document);
     key = String(key);
@@ -129,26 +154,47 @@ function getAllKanji() {
 }
 
 async function db_initPlayerData() {
+    const db = getFirestore(app);
+    await setDoc(doc(db, roomID, "players"), {
+        turn: turn,
+    });
+
     for(var i = 0;i < playerData.length;i++) {
         const list = ["NumberOfGotCards","turn"];
-        const db = getFirestore(app);
         await setDoc(doc(db, roomID, playerData[i]["playerName"]), {
-            [String(list[0])]:playerData[i][list[0]],
-            [String(list[1])]:playerData[i][list[1]]
+            [String(list[0])]: playerData[i][list[0]],
+            [String(list[1])]: playerData[i][list[1]]
         });
+    }
+}
+
+function inputPlayerData() {
+    var description = {
+        "レベル": "ゲームのレベルを入力してください（１～６）",
+        "人数": "ゲームをプレイする人数を入力してください",
+        "名前": "人目のプレイヤーの名前を入力してください"
+    };
+    var gameData = {
+        "レベル": window.prompt(description["レベル"], "1"),
+        "人数": window.prompt(description["人数"], "4"),
+    };
+
+    if(1 <= parseInt(gameData["レベル"]) && parseInt(gameData["レベル"]) <= 6) levelNumber = parseInt(gameData["レベル"]);
+    for(var i = 0;i < parseInt(gameData["人数"]);i++) {
+        playerData.push({"playerName": window.prompt(String(i+1)+description["名前"],"player"+String(i+1)),"NumberOfGotCards": 0, "turn": i+1});
     }
 }
 
 
 function setup() {
-    levelNumber = 1;
+    inputPlayerData();
     db_initPlayerData();
     getAllKanji();
     const shuffledKanjiList = getRandomCards();
     const selectedKanjiList = shuffledKanjiList.slice(0,Math.floor(NumberOfCards/2));
-    console.log(selectedKanjiList);
     const shuffledSelectedKanjiList = shuffleArray([...selectedKanjiList,...selectedKanjiList]);
     placeCards(shuffledSelectedKanjiList);
+    console.log(shuffledSelectedKanjiList);
 }
 
 setup();
