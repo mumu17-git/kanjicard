@@ -22,10 +22,13 @@
         </svg>
     
         <div class="bg">
-            <div class="box-010">
-                <span>playerName</span>
-                <p>取ったカードの枚数　　<strong id="player1_point"></strong></p>
-            </div>
+            <table id="board-main">
+                <tr id="bm-tr1"><td id="bm-td1-1"></td><td id="bm-td1-2"></td><td id="bm-td1-3"></td></tr>
+                <tr id="bm-tr2"><td id="bm-td2-1"></td><td id="bm-td2-2"></td><td id="bm-td2-3"></td></tr>
+                <tr id="bm-tr3"><td id="bm-td3-1"></td><td id="bm-td3-2"></td><td id="bm-td3-3"></td></tr>
+            </table>
+
+            <h1 id="playerTurn" style="color: white;"></h1>
         </div>
     <script src="../firebaseApp.js" type="module"></script>
     <script src="main.js" type="module"></script>
