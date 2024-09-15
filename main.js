@@ -1,3 +1,6 @@
+import {app} from './firebaseApp.js'
+import { getFirestore, doc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js"
+
 const di =(id)=>{return document.getElementById(id)}
 const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
 const cardsElem = di("table-cards");
@@ -9,6 +12,8 @@ var selectedCardsNumber = [0,0];
 var NumberOfReversedCards = 0;
 var playerData = [{"playerName": "player1","NumberOfGotCards": 0, "turn": 1}];
 var turn = 1;
+const roomID = "room0";
+
 
 async function onClick_Card(elem) {
     var parentID = elem.getAttribute("id");
@@ -62,12 +67,23 @@ function twoCardsReversed() {
         for(var i = 0;i < selectedCardsNumber.length;i++) {
             setTimeout(Restore_Card,2500,selectedCardsNumber[i]);
         }
-        
         setNextTurn();
-        selectedCardsNumber[0] = 0;
-        selectedCardsNumber[1] = 0;
-        NumberOfReversedCards = 0;
+    }else {
+
     }
+
+    selectedCardsNumber[0] = 0;
+    selectedCardsNumber[1] = 0;
+    NumberOfReversedCards = 0;
+}
+
+async function save(collection,document,key,value) {
+    var db = getFirestore(app);
+    var userRef = doc(db, collection, document);
+    key = String(key);
+    await updateDoc(userRef, {
+        [key]:value
+    });
 }
 
 function parseCsv(data) {
@@ -112,11 +128,22 @@ function getAllKanji() {
     }
 }
 
+async function db_initPlayerData() {
+    for(var i = 0;i < playerData.length;i++) {
+        const list = ["NumberOfGotCards","turn"];
+        const db = getFirestore(app);
+        await setDoc(doc(db, roomID, playerData[i]["playerName"]), {
+            [String(list[0])]:playerData[i][list[0]],
+            [String(list[1])]:playerData[i][list[1]]
+        });
+    }
+}
+
 
 function setup() {
     levelNumber = 1;
+    db_initPlayerData();
     getAllKanji();
-    
     const shuffledKanjiList = getRandomCards();
     const selectedKanjiList = shuffledKanjiList.slice(0,Math.floor(NumberOfCards/2));
     console.log(selectedKanjiList);
