@@ -15,10 +15,13 @@ var gameData = null;
 var maxplayer = 0;
 var turn = 1;
 const roomID = String(new Date().getTime());
+var wait = false;
 
 
 window.onClick_Card = async(elem) =>{
 //async function onClick_Card(elem) {
+    if(wait) return;
+    wait = true;
     var parentID = elem.getAttribute("id");
     var childID = parentID.replace("back","front");
     var parentElem = di(parentID);
@@ -35,6 +38,7 @@ window.onClick_Card = async(elem) =>{
 
     console.log(selectedCardsNumber);
     if(!selectedCardsNumber.includes(0)) twoCardsReversed();
+    wait = false;
 }
 
 async function Restore_Card(selectedCardNumber_tmp) {
