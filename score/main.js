@@ -17,6 +17,7 @@ function reloadPoint(pd) {
 
     
     setTimeout(db_loadInit,2000);
+    
 }
 
 function initScreen(i) {
